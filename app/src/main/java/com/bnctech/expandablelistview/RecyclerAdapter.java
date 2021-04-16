@@ -4,7 +4,9 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,9 +16,9 @@ import java.util.ArrayList;
 public class RecyclerAdapter extends RecyclerView.Adapter {
 
     Context context;
-    ArrayList<ChildItem> items;
+    ArrayList<GroupItem.ChildItem> items;
 
-    public RecyclerAdapter(Context context, ArrayList<ChildItem> items) {
+    public RecyclerAdapter(Context context, ArrayList<GroupItem.ChildItem> items) {
         this.context = context;
         this.items = items;
     }
@@ -39,7 +41,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter {
         VH vh = (VH)holder; //VH클래스 생성때 제네릭 하면 다운캐스팅 생략 할수 있다
 
         //현재번째(position)데이터를 가진 item객체 얻어오기
-        ChildItem item = items.get(position);
+        GroupItem.ChildItem item = items.get(position);
 
         //vh.civ.setImageResource( item.profileImg ); //item.profileImg 는 리소스(자원), vh.civ는 뷰객체(액자)=
         vh.beforePrice.setText( item.beforePrice );
@@ -58,11 +60,20 @@ public class RecyclerAdapter extends RecyclerView.Adapter {
         //생성자에서 fid참조한후 멤버변수에 잡아놓는다(Holder)=
         TextView beforePrice;
         TextView afterPrice;
+        Button btn;
 
         public VH(@NonNull View itemView) {
             super(itemView);
             beforePrice = itemView.findViewById(R.id.child_item_beforePrice);
             afterPrice = itemView.findViewById(R.id.child_item_afterPrice);
+            btn = itemView.findViewById(R.id.btn);
+
+            btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(context, items.get(getLayoutPosition()).beforePrice+"\n"+items.get(getLayoutPosition()).afterPrice, Toast.LENGTH_SHORT).show();
+                }
+            });
 
             //아이템클릭(카드뷰 자식뷰들) 리스너 생성 및 설정을 MyAdapter에서 설정한다, 복습할것
             //itemView.setOnClickListener, itemView한테 리스너 붙이면 cardview 안에있는 모든 뷰 클릭에 반응함
